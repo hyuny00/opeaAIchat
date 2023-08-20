@@ -372,6 +372,7 @@
                 "sha256:9c85190c439f29e95d0cc9509a77d63dbcdbda49a4f9bdf8ff4b567f4a10a44d"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.7'",
             "version": "==3.8.5"
         },
         "exceptiongroup": {
@@ -581,6 +582,7 @@
                 "sha256:785e4d46001b491e3f450102238dbb257926f0d6feecbda5bc039c52709d2736"
             ],
             "index": "pypi",
+            "markers": "python_version < '4.0' and python_full_version >= '3.8.1'",
             "version": "==0.0.268"
         },
         "langsmith": {
@@ -858,6 +860,7 @@
                 "sha256:e0a7c2f7da26bdbe5354b03c6d4b82a2f34bd4458c7a17ae1a7092c3e397e03c"
             ],
             "index": "pypi",
+            "markers": "python_full_version >= '3.7.1'",
             "version": "==0.27.8"
         },
         "packaging": {
@@ -994,6 +997,7 @@
                 "sha256:f5971a9226b701070a4bf2c38c89e5a3f0d64de8debda981d1db98583009122a"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.8'",
             "version": "==1.0.0"
         },
         "pyyaml": {
