@@ -9,6 +9,7 @@ langchain = "*"
 wikipedia = "*"
 openai = "*"
 duckduckgo-search = "*"
+sentence-transformers = "*"
 
 [dev-packages]
 
