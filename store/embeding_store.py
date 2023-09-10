@@ -5,6 +5,8 @@ from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
+from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOpenAI
 import pickle
 import os
 
@@ -17,17 +19,20 @@ class EmbeddingStore:
         self.store_path = os.getenv("STORE_DIR")
 
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000, chunk_overlap=100, length_function=len
+            chunk_size=1000, chunk_overlap=30,   length_function=len
         )
+        #all-MiniLM-L6-v2
+        #self.model_name = "sentence-transformers/all-mpnet-base-v2"
+        #self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
 
-        self.model_name = "sentence-transformers/all-mpnet-base-v2"
+        self.model_name = "sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens"
+
         self.model_kwargs = {"device": "cuda"}
 
         self.embedding = HuggingFaceEmbeddings(model_name=self.model_name)
         # self.embedding = HuggingFaceEmbeddings(model_name=self.model_name, model_kwargs=self.model_kwargs)
 
-    def all_embedding_vector(self, storeName: str):
-
+    def all_embedding_vector(self, storeName: str, indexName: str):
         """
         디렉토리의 모든 파일을 임베딩한다.
 
@@ -55,35 +60,34 @@ class EmbeddingStore:
         split_docs = self.text_splitter.split_documents(documents=langchain_documents)
 
         print("Embed and create vector index")
-        self.save_doc(storeName, split_docs)
+        self._save_doc(indexName, split_docs)
 
-
-
-    def embedding_vector(self, fileName: str):
-
+    def embedding_vector(self, fileName: str, indexName: str):
         """
         파일 한건을 임베딩한다.
         """
-      
+
         langchain_documents = []
 
         file_extension = get_file_extension(fileName)
         try:
-            loader = self._get_loader( os.path.join(self.file_path, fileName), file_extension)
+            loader = self._get_loader(
+                os.path.join(self.file_path, fileName), file_extension
+            )
+
+            print(os.path.join(self.file_path, fileName))
             data = loader.load()
             langchain_documents.extend(data)
 
         except Exception:
+            print("파일을 찾을 수 없습니다.")
 
-            split_docs = self.text_splitter.split_documents(documents=langchain_documents)
+        split_docs = self.text_splitter.split_documents(documents=langchain_documents)
 
         print("Embed and create vector index")
-        self.save_doc(fileName, split_docs)
-
-
+        self._save_doc(indexName, split_docs)
 
     def _get_loader(self, document, file_extension):
-
         """
         파일종류에따른 로드를 반환한다
         """
@@ -103,17 +107,22 @@ class EmbeddingStore:
             loader = TextLoader(file_path=document, encoding="utf-8")
         return loader
 
-    def save_doc(self, storeName, split_docs):
-
+    def _save_doc(self, indexName, split_docs):
         """
         분할된 문서를 벡터저장소에 저장한다
+        indexName : 한글제목은 저장안됨
         """
+
+        indexName = indexName.replace(" ", "")  # 모든 공백 제거
+
         vectore_store = FAISS.from_documents(split_docs, embedding=self.embedding)
-        vectore_store.save_local(self.store_path, index_name=storeName)
+
+        path = os.path.join(self.store_path, indexName)
+
+        vectore_store.save_local(path)
 
 
 def get_file_extension(file_name) -> str:
-
     """
     파일 확장자를 리턴한다
     """
@@ -126,4 +135,17 @@ if __name__ == "__main__":
     print("open ai chat")
     em = EmbeddingStore()
 
-    em.all_embedding_vector("test01")
+    # em.all_embedding_vector("asd345g.pdf", "test01")
+    #em.embedding_vector("asd345g.pdf", "test01")
+
+    new_vectorstore = FAISS.load_local(
+        "D:/Project/openAIChat/embedding/test01", em.embedding
+    )
+    qa = RetrievalQA.from_chain_type(
+        llm=ChatOpenAI(verbose=True, temperature=0), chain_type="stuff", retriever=new_vectorstore.as_retriever(),
+    )
+
+    res = qa.run("통합검색 도입에 따른 응용 SW 재개발 알려줘")
+    
+   
+    print(res)
