@@ -13,53 +13,44 @@ from langchain.document_loaders import WikipediaLoader
 load_dotenv()
 
 
-class Config():
+class Config:
     """
     Contains the configuration of the LLM.
     """
-    model = 'gpt-3.5-turbo'
+
+    model = "gpt-3.5-turbo"
     llm = ChatOpenAI(temperature=0, model=model)
 
 
 def setup_agent() -> AgentExecutor:
-   """
-   Sets up the tools for a function based chain.
-    We have here the following tools:
-    - wikipedia
-    - duduckgo
-   """
-   cfg = Config()
-   duckduck_search = DuckDuckGoSearchAPIWrapper()
-   wikipedia = WikipediaAPIWrapper()
-   #wikipedia.lang="kr"
-   #loader = WikipediaLoader(lang="kr",  query="");
+    """
+    Sets up the tools for a function based chain.
+     We have here the following tools:
+     - wikipedia
+     - duduckgo
+    """
+    cfg = Config()
+    duckduck_search = DuckDuckGoSearchAPIWrapper()
+    wikipedia = WikipediaAPIWrapper()
+    # wikipedia.lang="kr"
+    # loader = WikipediaLoader(lang="kr",  query="");
 
- 
-
-   tools = [
-
-      
+    tools = [
         Tool(
             name="Wikipedia",
             func=wikipedia.run,
-            description="useful when you need an answer about encyclopedic general knowledge"
-           
+            description="useful when you need an answer about encyclopedic general knowledge",
         )
-       
-       
-      ]
+    ]
 
-   grand_agent = initialize_agent(
-        tools, 
-        cfg.llm, 
-        agent=AgentType.OPENAI_FUNCTIONS, 
-        verbose=True
-   )
-    
-   result=grand_agent.run("뉴진스")
-   print(result)
+    grand_agent = initialize_agent(
+        tools, cfg.llm, agent=AgentType.OPENAI_FUNCTIONS, verbose=True
+    )
 
-   """
+    result = grand_agent.run("뉴진스 멤버는 몇명이야")
+    print(result)
+
+    """
    agent_kwargs, memory = setup_memory()
 
    return initialize_agent(
@@ -73,7 +64,7 @@ def setup_agent() -> AgentExecutor:
    """
 
 
-if __name__ == '__main__':
-   print('open ai chat')
-   print(os.environ['OPENAI_API_KEY'])
-   setup_agent()
+if __name__ == "__main__":
+    print("open ai chat")
+    print(os.environ["OPENAI_API_KEY"])
+    setup_agent()

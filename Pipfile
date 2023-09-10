@@ -9,6 +9,10 @@ langchain = "*"
 wikipedia = "*"
 openai = "*"
 duckduckgo-search = "*"
+faiss-cpu = "*"
+sentence-transformers = "*"
+pypdf = "*"
+tiktoken = "*"
 
 [dev-packages]
 

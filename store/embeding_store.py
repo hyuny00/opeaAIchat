@@ -145,7 +145,7 @@ if __name__ == "__main__":
         llm=ChatOpenAI(verbose=True, temperature=0), chain_type="stuff", retriever=new_vectorstore.as_retriever(),
     )
 
-    res = qa.run("통합검색 도입에 따른 응용 SW 재개발 알려줘")
-    
+    res = qa.run("통합검색도입에 따른 응용 SW 재개발 알려줘")
+     
    
     print(res)
