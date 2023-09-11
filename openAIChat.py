@@ -32,8 +32,6 @@ def setup_agent() -> AgentExecutor:
     cfg = Config()
     duckduck_search = DuckDuckGoSearchAPIWrapper()
     wikipedia = WikipediaAPIWrapper()
-    # wikipedia.lang="kr"
-    # loader = WikipediaLoader(lang="kr",  query="");
 
     tools = [
         Tool(
@@ -66,5 +64,4 @@ def setup_agent() -> AgentExecutor:
 
 if __name__ == "__main__":
     print("open ai chat")
-    print(os.environ["OPENAI_API_KEY"])
     setup_agent()

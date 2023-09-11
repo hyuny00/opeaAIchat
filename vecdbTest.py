@@ -1,6 +1,6 @@
 import os
+from dotenv import load_dotenv
 
-os.environ["OPENAI_API_KEY"] = "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"
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -9,6 +9,7 @@ from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 
 if __name__ == "__main__":
+    """
     print("hi")
     pdf_path = "D:/Project/openAIChat/file/asd345g.pdf"
     loader = PyPDFLoader(file_path=pdf_path)
@@ -17,7 +18,7 @@ if __name__ == "__main__":
         chunk_size=1000, chunk_overlap=30, separator="\n"
     )
     docs = text_splitter.split_documents(documents=documents)
-
+"""
     embeddings = OpenAIEmbeddings()
     #vectorstore = FAISS.from_documents(docs, embeddings)
     #vectorstore.save_local("faiss_index_react")
