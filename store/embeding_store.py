@@ -139,7 +139,7 @@ if __name__ == "__main__":
     #em.embedding_vector("asd345g.pdf", "test01")
 
     new_vectorstore = FAISS.load_local(
-        "D:/Project/openAIChat/embedding/test01", em.embedding
+        "embedding/test01", em.embedding
     )
     qa = RetrievalQA.from_chain_type(
         llm=ChatOpenAI(verbose=True, temperature=0), chain_type="stuff", retriever=new_vectorstore.as_retriever(),
